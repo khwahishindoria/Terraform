@@ -1,74 +1,19 @@
-resource "aws_security_group" "prod-vpc-1-SG" {
-    name = "prod-VPC-1-Web-SG"
-    vpc_id = aws_vpc.prod-vpc-1.id
-
-    ingress {
-        description = "Allow HTTP Traffic"
-        from_port = 80
-        to_port = 80
-        cidr_blocks = [ "0.0.0.0/0" ]
-        protocol = "tcp"
+resource "aws_subnet" "prod-vpc_subnet1" {
+    vpc_id = aws_vpc.prod-vpc-1
+    cidr_block = "10.0.0.0/24"
+    map_public_ip_on_launch = true
+    availability_zone = "us-east-1a"
+    tags = {
+        Name = "vpc-1-subnet"
     }
-    ingress {
-        description = "Allow SSH Traffic"
-        from_port = 22
-        to_port = 22
-        protocol = "tcp"
-        cidr_blocks = [ "0.0.0.0/0" ]
-
-    }
-    ingress {
-        description = "Allow ICMP Traffic"
-        from_port = -1
-        to_port = -1
-        protocol = "icmp"
-        cidr_blocks = [ "0.0.0.0/0" ]
-
-    }
-    egress {
-        description = "Allow all outgoing traffic"
-        from_port = 0
-        to_port = 0
-        protocol = -1
-        cidr_blocks = [ "0.0.0.0/0" ]
-    }
-
 }
 
-
-resource "aws_security_group" "prod-vpc-2-SG" {
-    name = "prod-VPC-2-Web-SG"
-    vpc_id = aws_vpc.prod-vpc-2.id
-
-    ingress {
-        description = "Allow HTTP Traffic"
-        from_port = 80
-        to_port = 80
-        cidr_blocks = [ "0.0.0.0/0" ]
-        protocol = "tcp"
+resource "aws_subnet" "prod-vpc_subnet2" {
+    vpc_id = aws_vpc.prod-vpc.id
+    cidr_block = "172.16.0.0/24"
+    map_public_ip_on_launch = true
+    availability_zone = "us-east-1c"
+    tags = {
+        Name = "vpc-2-subnet"
     }
-    ingress {
-        description = "Allow SSH Traffic"
-        from_port = 22
-        to_port = 22
-        protocol = "tcp"
-        cidr_blocks = [ "0.0.0.0/0" ]
-
-    }
-    ingress {
-        description = "Allow ICMP Traffic"
-        from_port = -1
-        to_port = -1
-        protocol = "icmp"
-        cidr_blocks = [ "0.0.0.0/0" ]
-
-    }
-    egress {
-        description = "Allow all outgoing traffic"
-        from_port = 0
-        to_port = 0
-        protocol = -1
-        cidr_blocks = [ "0.0.0.0/0" ]
-    }
-
 }
