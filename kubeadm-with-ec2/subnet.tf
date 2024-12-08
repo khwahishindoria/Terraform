@@ -7,6 +7,7 @@ resource "aws_subnet" "prod-vpc_subnet1" {
         type = "public-subnet"
         Name = "public-subnet"
     }
+    depends_on = [ aws_vpc.prod-vpc ]
 }
 
 resource "aws_subnet" "prod-vpc_subnet2" {
@@ -18,4 +19,5 @@ resource "aws_subnet" "prod-vpc_subnet2" {
         type = "private-subnet"
         Name = "private-subnet"
     }
+    depends_on = [ aws_vpc.prod-vpc ]
 }
