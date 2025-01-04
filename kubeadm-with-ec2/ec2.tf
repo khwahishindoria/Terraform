@@ -3,15 +3,15 @@ resource "aws_key_pair" "prod-keypair" {
     public_key = file("~/.ssh/id_rsa.pub")
 }
 
-resource "aws_instance" "Bastion" {
+resource "aws_instance" "master-node" {
   ami                     = "ami-0866a3c8686eaeeba"
-  instance_type           = "t2.micro"
+  instance_type           = "t2.medium"
   subnet_id = aws_subnet.prod-vpc_subnet1.id
   key_name = aws_key_pair.prod-keypair.key_name
   
   vpc_security_group_ids = [ aws_security_group.prod-vpc-SG.id ]
   tags = {
-    Name = "Bastion"
+    Name = "master-01"
   }
 
   connection {
@@ -20,60 +20,80 @@ resource "aws_instance" "Bastion" {
     private_key = file("~/.ssh/id_rsa")
     host = self.public_ip
   }
+
+  provisioner "file" {
+    source = "/home/ubuntu/.ssh/id_rsa"
+    destination = "/home/ubuntu/key.pem" 
+  }
+
+  provisioner "file" {
+    source = "/home/ubuntu/script-all-nodes.sh"
+    destination = "/home/ubuntu/script-all-nodes.sh" 
+  }
+
+
   provisioner "remote-exec" {
-        inline = [
-        "echo 'Hello from the remote instance'",
-        "sudo apt update -y",  # Update package lists (for ubuntu)
-        "sudo apt-get install -y python3-pip",  # Example package installation
-        "sudo apt-get install -y nginx",
-
-
-        ]
+    inline = [ 
+      "sudo apt update -y",
+      "sudo hostnamectl set-hostname master-01",
+      "sudo chmod 600 /home/ubuntu/key.pem",
+      "sudo chmod +x /home/ubuntu/script-all-nodes.sh",
+      "sudo bash /home/ubuntu/script-all-nodes.sh",
+     ]
 
     }
     depends_on = [ aws_vpc.prod-vpc, aws_route_table.public-rt ]
 }
 
-resource "aws_instance" "master-01" {
+
+resource "aws_instance" "worker-nodes" {
   ami                     = "ami-0866a3c8686eaeeba"
   instance_type           = "t2.medium"
   subnet_id = aws_subnet.prod-vpc_subnet2.id
   key_name = aws_key_pair.prod-keypair.key_name
   vpc_security_group_ids = [ aws_security_group.prod-vpc-SG.id ]
-
-  tags = {
-    Name = "master-01"
-  }
-  user_data = <<EOF
-    #!/bin/bash
-    sudo apt-get install gnupg
-    sudo apt-get install -y python3-pip
-    sudo apt-get install -y nginx
-
-
-  EOF
-  depends_on = [ aws_vpc.prod-vpc, aws_route_table.public-rt ]
-
-}
-
-resource "aws_instance" "worker-01" {
-  ami                     = "ami-0866a3c8686eaeeba"
-  instance_type           = "t2.micro"
-  subnet_id = aws_subnet.prod-vpc_subnet2.id
-  key_name = aws_key_pair.prod-keypair.key_name
-  vpc_security_group_ids = [ aws_security_group.prod-vpc-SG.id ]
   for_each = var.ec2-instance-names
+  user_data = <<EOF
+#!/bin/bash
+sudo apt-get update
+sudo hostnamectl set-hostname ${each.value}
+EOF
+
+  connection {
+    bastion_host = aws_instance.master-node.public_ip
+    bastion_port = "22"
+    bastion_private_key = file("~/.ssh/id_rsa")
+    type = "ssh"
+    bastion_user = "ubuntu"
+    user = "ubuntu"
+    private_key = file("~/.ssh/id_rsa")
+    host = self.private_ip
+  }
+
+  provisioner "file" {
+    source = "/home/ubuntu/.ssh/id_rsa"
+    destination = "/home/ubuntu/key.pem" 
+  }
+
+  provisioner "file" {
+    source = "/home/ubuntu/script-all-nodes.sh"
+    destination = "/home/ubuntu/script-all-nodes.sh" 
+  }
+
+  provisioner "remote-exec" {
+    inline = [ 
+      "sudo apt update -y",
+      "sudo hostnamectl set-hostname ${each.value}",
+      "sudo chmod 600 /home/ubuntu/key.pem",
+      "sudo chmod +x /root/script-all-nodes.sh",
+      "sudo bash /home/ubuntu/script-all-nodes.sh",
+      "ssh -i /home/ubuntu/key.pem -o StrictHostKeyChecking=accept-new ubuntu@${aws_instance.master-node.private_ip} 'sudo kubeadm token create --print-join-command;' > /home/ubuntu/kube_join.sh",
+      "sudo bash /home/ubuntu/kube_join.sh",
+     ]    
+  }
+
   tags = {
     Name = each.value
   }
-  user_data = <<EOF
-    #!/bin/bash
-    sudo apt-get install gnupg
-    sudo apt-get install -y python3-pip
-    sudo apt-get install -y nginx
-
-
-  EOF
   depends_on = [ aws_vpc.prod-vpc, aws_route_table.public-rt ]
-
 }
