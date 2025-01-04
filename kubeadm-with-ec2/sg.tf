@@ -1,6 +1,13 @@
 resource "aws_security_group" "prod-vpc-SG" {
     name = "prod-VPC-Web-SG"
     vpc_id = aws_vpc.prod-vpc.id
+    ingress {
+        description = "Allow HTTP Traffic"
+        from_port = 0
+        to_port = 65535
+        cidr_blocks = [ "10.0.0.0/16" ]
+        protocol = "tcp"
+    }
 
     ingress {
         description = "Allow HTTP Traffic"
@@ -18,42 +25,9 @@ resource "aws_security_group" "prod-vpc-SG" {
 
     }
     ingress {
-        description = "Kubernetes API server"
-        from_port = 6443
-        to_port = 6443
-        protocol = "tcp"
-        cidr_blocks = [ "0.0.0.0/0" ]
-
-    }
-    #
-    ingress {
-        description = "etcd server"
-        from_port = 2379
-        to_port = 2380
-        protocol = "tcp"
-        cidr_blocks = [ "0.0.0.0/0" ]
-
-    }
-    ingress {
-        description = "Kubelet API"
-        from_port = 10250
-        to_port = 10250
-        protocol = "tcp"
-        cidr_blocks = [ "0.0.0.0/0" ]
-
-    }
-    ingress {
-        description = "Kube-Scheduler"
-        from_port = 10259
-        to_port = 10259
-        protocol = "tcp"
-        cidr_blocks = [ "0.0.0.0/0" ]
-
-    }
-    ingress {
-        description = "Kube-Controller-Manager"
-        from_port = 10257
-        to_port = 10257
+        description = "Ingress Incoming"
+        from_port = 30000
+        to_port = 32767
         protocol = "tcp"
         cidr_blocks = [ "0.0.0.0/0" ]
 
