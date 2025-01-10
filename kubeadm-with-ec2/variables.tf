@@ -4,8 +4,8 @@ variable "ec2-instance-names" {
 }
 
 
-output "master-public-ip" {
-  value = aws_instance.master-node.public_ip
+output "prod-bastion-public-ip" {
+  value = aws_instance.prod-bastion.public_ip
 }
 
 output "master-01-privateip" {
