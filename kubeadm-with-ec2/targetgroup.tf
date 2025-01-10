@@ -9,5 +9,5 @@ resource "aws_lb_target_group" "tg-master" {
 resource "aws_lb_target_group_attachment" "test" {
   target_group_arn = aws_lb_target_group.tg-master.arn
   target_id        = aws_instance.master-node.id
-  port             = 31521
+  port             = 31599
 }
