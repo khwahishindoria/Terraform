@@ -17,4 +17,6 @@ output "worker-nodes-private-ip" {
   value = [ for i in aws_instance.worker-nodes: i.private_ip ]
 }
 
-
+output "load_balancer-dns" {
+  value = aws_lb.prod-alb.dns_name
+}
