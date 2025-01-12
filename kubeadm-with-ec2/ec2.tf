@@ -81,9 +81,6 @@ resource "aws_instance" "master-node" {
       "sudo apt update -y",
       "sudo hostnamectl set-hostname master-01",
       "sudo chmod 600 /home/ubuntu/key.pem",
-      "sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3",
-      "sudo chmod 700 get_helm.sh",
-      "./get_helm.sh",
       "sudo chmod +x /home/ubuntu/script-all-nodes.sh",
       "sudo bash /home/ubuntu/script-all-nodes.sh",
      ]
