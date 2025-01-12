@@ -46,7 +46,14 @@ resource "aws_instance" "master-node" {
   tags = {
     Name = "master-01"
   }
-
+  root_block_device {
+    delete_on_termination = true
+    encrypted = false
+    iops = 3000
+    throughput = 125
+    volume_size = 30
+    volume_type = "gp3"
+    }
   connection {
     bastion_host = aws_instance.prod-bastion.public_ip
     bastion_port = "22"
@@ -98,7 +105,14 @@ resource "aws_instance" "worker-nodes" {
 sudo apt-get update
 sudo hostnamectl set-hostname ${each.value}
 EOF
-
+  root_block_device {
+    delete_on_termination = true
+    encrypted = false
+    iops = 3000
+    throughput = 125
+    volume_size = 30
+    volume_type = "gp3"
+    }
   connection {
     bastion_host = aws_instance.prod-bastion.public_ip
     bastion_port = "22"
