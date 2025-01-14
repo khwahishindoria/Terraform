@@ -278,6 +278,10 @@ sudo apt-mark hold kubelet kubeadm kubectl
 host_master=`hostname`
 if [ "$host_master" == "master-01" ];
 then
+        sudo curl -fsSL -o /root/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        sudo chmod 700 /root/get_helm.sh
+        /root/get_helm.sh
+        sleep 5
         kubeadm init
         mkdir -p /root/.kube
         sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config

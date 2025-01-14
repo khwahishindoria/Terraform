@@ -4,8 +4,8 @@ variable "ec2-instance-names" {
 }
 
 
-output "master-public-ip" {
-  value = aws_instance.master-node.public_ip
+output "prod-bastion-public-ip" {
+  value = aws_instance.prod-bastion.public_ip
 }
 
 output "master-01-privateip" {
@@ -17,4 +17,6 @@ output "worker-nodes-private-ip" {
   value = [ for i in aws_instance.worker-nodes: i.private_ip ]
 }
 
-
+output "load_balancer-dns" {
+  value = aws_lb.prod-alb.dns_name
+}
