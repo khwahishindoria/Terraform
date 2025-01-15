@@ -8,6 +8,14 @@ resource "aws_instance" "prod-bastion" {
   instance_type           = "t2.medium"
   subnet_id = aws_subnet.prod-vpc_subnet1.id
   key_name = aws_key_pair.prod-keypair.key_name
+  root_block_device {
+    delete_on_termination = true
+    encrypted = false
+    iops = 3000
+    throughput = 125
+    volume_size = 30
+    volume_type = "gp3"
+    }
   
   vpc_security_group_ids = [ aws_security_group.prod-vpc-SG.id ]
   tags = {
