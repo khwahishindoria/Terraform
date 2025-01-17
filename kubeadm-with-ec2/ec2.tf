@@ -17,7 +17,7 @@ resource "aws_network_interface" "ni-master-node" {
 
 resource "aws_instance" "prod-bastion" {
   ami                     = "ami-0866a3c8686eaeeba"
-  instance_type           = "t2.medium"
+  instance_type           = "t3.medium"
   /*subnet_id = aws_subnet.prod-vpc_subnet1.id
   vpc_security_group_ids = [ aws_security_group.prod-vpc-SG.id ]
   
@@ -57,7 +57,6 @@ resource "aws_instance" "prod-bastion" {
     inline = [ 
       "sudo apt update -y",
       "sudo hostnamectl set-hostname prod-bastion",
-
       "sudo curl 'https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip' -o 'awscliv2.zip'",
       "sudo unzip awscliv2.zip",
       "sudo ./aws/install",
@@ -70,7 +69,7 @@ resource "aws_instance" "prod-bastion" {
 
 resource "aws_instance" "master-node" {
   ami                     = "ami-0866a3c8686eaeeba"
-  instance_type           = "t2.medium"
+  instance_type           = "t3.medium"
 /*subnet_id = aws_subnet.prod-vpc_subnet2.id
   vpc_security_group_ids = [ aws_security_group.prod-vpc-SG.id ]
 */
@@ -138,16 +137,11 @@ resource "aws_instance" "master-node" {
 
 resource "aws_instance" "worker-nodes" {
   ami                     = "ami-0866a3c8686eaeeba"
-  instance_type           = "t2.medium"
+  instance_type           = "t3.medium"
   subnet_id = aws_subnet.prod-vpc_subnet2.id
   key_name = aws_key_pair.prod-keypair.key_name
   vpc_security_group_ids = [ aws_security_group.prod-vpc-SG.id ]
   for_each = var.ec2-instance-names
-  user_data = <<EOF
-#!/bin/bash
-sudo apt-get update
-sudo hostnamectl set-hostname ${each.value}
-EOF
   root_block_device {
     delete_on_termination = true
     encrypted = false
