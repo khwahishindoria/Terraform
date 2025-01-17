@@ -129,7 +129,6 @@ resource "aws_instance" "master-node" {
       "sudo ./aws/install",
       "sudo chmod +x /home/ubuntu/script-all-nodes.sh",
       "sudo bash /home/ubuntu/script-all-nodes.sh",
-      "sudo echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCphMD6/q2Raz6ZAxupdmRMXy99881Pt9xCBT+9OuNGNsChTatZXcr2wLSrrAZkohkHfLB2POuEM9YurfRMDZJTWhUiQDoySC9Tgw0SdJISzv2J4QHE/0VXdxBPLbdBjaZP1d3/9FmXBfpMeKfUWC44tBqY449aaX2rqjx6TTf+W5qfnvG0Hzt2udgfx6gbK5hnzq6y3BDbyocPsSfEbqw3q1Jyjch4A+Hm56m+aBi1R/pStsnJ76VCYDH36Akw+91yzH1fErIgXbIv+HSnvEK7yoiY65XRSV6ROE1JAjvGelKW1Q3yNY7V4g+9wrPPdmb2hcnrv8i0K7hkbCQwtE9jlLxb3fbkkN8FW85O/QUbzLX5DwsgdVH90S506qRSFYmBZkbtBoM5pMpNKkilgjUSoh3/AiNkEqLVsXUolSCKcMTw+KmROGjyo1kV4372A7FUe89Sllr6XmnaWGj+JO6YdVqsYt64J1zmciTIT8F9ZpU1QtX7bEPEos5b8fFhs0M= jenkins@prod-bastion' >> /root/.ssh/authorized_keys",
      ]
 
     }
