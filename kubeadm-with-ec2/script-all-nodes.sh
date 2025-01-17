@@ -290,7 +290,8 @@ then
         sudo kubectl apply -f https://reweave.azurewebsites.net/k8s/v1.30/net.yaml
         echo "creating directory for jenkins node"
         mkdir /tmp/jenkins
+        sudo mkdir /var/lib/jenkins/.kube
         sudo cp -i /etc/kubernetes/admin.conf /var/lib/jenkins/.kube/config
-        sudo chown -R jenkins:jenkins /var/lib/jenkins/.kube/config
+        sudo chown -R jenkins:jenkins /var/lib/jenkins/.kube/
         sudo chown -R 600 /var/lib/jenkins/.kube/
 fi
