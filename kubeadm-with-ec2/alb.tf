@@ -22,3 +22,15 @@ resource "aws_lb_listener" "front_end" {
 
     }
 }
+
+resource "aws_lb_listener" "jenkins_listener" {
+  load_balancer_arn = aws_lb.prod-alb.arn
+  port              = "8080"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.tg-master.arn
+
+    }
+}

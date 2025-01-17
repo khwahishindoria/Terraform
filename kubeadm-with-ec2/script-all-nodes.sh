@@ -289,6 +289,8 @@ then
         sleep 10
         sudo kubectl apply -f https://reweave.azurewebsites.net/k8s/v1.30/net.yaml
         echo "creating directory for jenkins node"
-        mkdir /opt/jenkins
-        chmod 755 /opt/jenkins
+        mkdir /tmp/jenkins
+        sudo cp -i /etc/kubernetes/admin.conf /var/lib/jenkins/.kube/config
+        sudo chown -R jenkins:jenkins /var/lib/jenkins/.kube/config
+        sudo chown -R 600 /var/lib/jenkins/.kube/
 fi
