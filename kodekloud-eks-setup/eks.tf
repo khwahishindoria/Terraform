@@ -7,6 +7,16 @@ resource "aws_eks_cluster" "demo-eks" {
   compute_config {
     enabled = false
   }
+  kubernetes_network_config {
+    elastic_load_balancing {
+      enabled = false
+    }
+  }
+  storage_config {
+    block_storage {
+      enabled = false
+    }
+  }
   role_arn = aws_iam_role.eksClusterRole.arn
   version  = var.eks-version
 
