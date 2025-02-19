@@ -6,7 +6,7 @@ variable "eks-version" {
 }
 
 variable "coredns-addon-version" {
-    default = "v1.11.4-eksbuild.2"
+    default = "v1.11.3-eksbuild.1"
 }
 variable "pod-identity-agent-addon-version" {
   default = "v1.3.5-eksbuild.2"
