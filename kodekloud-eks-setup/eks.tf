@@ -8,7 +8,7 @@ resource "aws_eks_cluster" "demo-eks" {
     enabled = false
   }
   role_arn = aws_iam_role.eksClusterRole.arn
-  version  = "1.31"
+  version  = var.eks-version
 
   vpc_config {
     subnet_ids = [
