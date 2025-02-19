@@ -17,6 +17,14 @@ resource "aws_security_group" "prod-vpc-SG" {
         protocol = "tcp"
     }
     ingress {
+        description = "Allow Jenkins Traffic"
+        from_port = 8080
+        to_port = 8080
+        cidr_blocks = [ "0.0.0.0/0" ]
+        protocol = "tcp"
+    }
+
+    ingress {
         description = "Allow SSH Traffic"
         from_port = 22
         to_port = 22
